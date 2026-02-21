@@ -47,8 +47,7 @@ module Amber
       def on_message(client_socket_id, message)
         client_socket = ClientSockets.client_sockets[client_socket_id]?
         if client_socket.nil?
-          ClientSockets.remove_client_socket(client_socket_id)
-          # ClientSockets.client_sockets.delete(client_socket)
+          ClientSockets.client_sockets.delete(client_socket)
           return
         end
         handle_message(client_socket, message)
@@ -66,8 +65,7 @@ module Amber
       # Called when a socket subscribes to a channel
       protected def subscribe_to_channel(client_socket, message)
         if client_socket.nil?
-          ClientSockets.remove_client_socket(client_socket)
-          # ClientSockets.client_sockets.delete(client_socket)
+          ClientSockets.client_sockets.delete(client_socket)
           return
         end
         handle_joined(client_socket, message)
@@ -76,8 +74,7 @@ module Amber
       # Called when a socket unsubscribes from a channel
       protected def unsubscribe_from_channel(client_socket)
         if client_socket.nil?
-          ClientSockets.remove_client_socket(client_socket)
-          # ClientSockets.client_sockets.delete(client_socket)
+          ClientSockets.client_sockets.delete(client_socket)
           return
         end
         handle_leave(client_socket)
