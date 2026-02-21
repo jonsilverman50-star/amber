@@ -89,7 +89,9 @@ module Amber
       # example message: {"event" => "message", "topic" => "rooms:123", "subject" => "msg:new", "payload" => {"message" => "hello"}}
       protected def rebroadcast!(message)
         subscribers = ClientSockets.get_subscribers_for_topic(message["topic"])
-        subscribers.each_value(&.socket.send(message.to_json) rescue ClientSockets.client_sockets.delete(socket))
+        subscribers.each_value do |subscriber|
+          subscriber.socket.send(message.to_json) rescue ClientSockets.client_sockets.delete(socket)
+        end
       end
 
       # Ensure the pubsub adapter instance exists, and set up the on_message proc callback
