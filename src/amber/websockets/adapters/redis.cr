@@ -26,6 +26,31 @@ module Amber::WebSockets::Adapters
         @subscriber.auth(Amber.settings.secrets["redis_password"])
         @publisher.auth(Amber.settings.secrets["redis_password"])
       end
+
+      spawn do
+        @subscriber.subscribe(CHANNEL_TOPIC_PATHS) do |on|
+          on.message do |_, m|
+            Fiber.yield
+            msg = JSON.parse(m)
+            sender_id = msg["sender"].as_s
+            message = msg["msg"]
+            channel_name = message["topic"].to_s.split(":").first
+            if @listeners.has_key?(channel_name)
+                @listeners[channel_name].call(sender_id, message)
+            end
+          end
+          on.subscribe do |channel, subscriptions|
+            Fiber.yield
+            Log.info { "Subscribed to Redis channel #{channel}" }
+            @subscribed = true
+          end
+          on.unsubscribe do |channel, subscriptions|
+            Fiber.yield
+            Log.info { "Unsubscribed from Redis channel #{channel}" }
+            @subscribed = false
+          end
+        end
+      end
       
     end
 
