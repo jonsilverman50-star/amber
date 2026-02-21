@@ -90,7 +90,7 @@ module Amber
       protected def rebroadcast!(message)
         subscribers = ClientSockets.get_subscribers_for_topic(message["topic"])
         subscribers.each_value do |subscriber|
-          subscriber.socket.send(message.to_json) rescue ClientSockets.client_sockets.delete(socket)
+          subscriber.socket.send(message.to_json) rescue ClientSockets.client_sockets.delete(subscriber.socket)
         end
       end
 
