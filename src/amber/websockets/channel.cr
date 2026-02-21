@@ -46,6 +46,10 @@ module Amber
       # Called from proc when message is returned from the pubsub service
       def on_message(client_socket_id, message)
         client_socket = ClientSockets.client_sockets[client_socket_id]?
+        if client_socket.nil?
+          ClientSockets.client_sockets.delete(client_socket)
+          return
+        end
         handle_message(client_socket, message)
       end
 
