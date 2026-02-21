@@ -17,13 +17,13 @@ module Amber::WebSockets::Adapters
     # Establish subscribe and publish connections to Redis
     def initialize
       
-      uri = URI.parse(ENV["REDIS_URL"])
+      uri = URI.parse(Amber.settings.redis_url.to_s)
 
-      @subscriber = Redis.new(host: uri.host, port: uri.port.to_i)
-      @publisher = Redis.new(host: uri.host, port: uri.port.to_i)
+      @subscriber = Redis.new(host: uri.host.to_s, port: uri.port.to_s.to_i)
+      @publisher = Redis.new(host: uri.host.to_s, port: uri.port.to_s.to_i)
       
-      @subscriber.auth(uri.password)
-      @publisher.auth(uri.password)
+      @subscriber.auth(Amber.settings.secrets["redis_password"])
+      @publisher.auth(Amber.settings.secrets["redis_password"])
 
       spawn do
         @subscriber.subscribe(CHANNEL_TOPIC_PATHS) do |on|
