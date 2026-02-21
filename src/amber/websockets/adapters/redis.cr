@@ -49,7 +49,9 @@ module Amber::WebSockets::Adapters
               sender_id = msg["sender"].as_s
               message = msg["msg"]
               channel_name = message["topic"].to_s.split(":").first
-              @listeners[channel_name].call(sender_id, message)
+              if @listeners.has_key?(channel_name)
+                @listeners[channel_name].call(sender_id, message)
+              end
             end
             on.subscribe do |channel, subscriptions|
               Fiber.yield
