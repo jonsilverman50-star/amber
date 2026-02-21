@@ -66,7 +66,7 @@ module Amber
       # Called when a socket subscribes to a channel
       protected def subscribe_to_channel(client_socket, message)
         if client_socket.nil?
-          ClientSockets.remove_client_socket(client_socket.id)
+          ClientSockets.remove_client_socket(client_socket)
           # ClientSockets.client_sockets.delete(client_socket)
           return
         end
@@ -76,7 +76,7 @@ module Amber
       # Called when a socket unsubscribes from a channel
       protected def unsubscribe_from_channel(client_socket)
         if client_socket.nil?
-          ClientSockets.remove_client_socket(client_socket.id)
+          ClientSockets.remove_client_socket(client_socket)
           # ClientSockets.client_sockets.delete(client_socket)
           return
         end
