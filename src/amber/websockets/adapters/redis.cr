@@ -22,8 +22,10 @@ module Amber::WebSockets::Adapters
       @subscriber = Redis.new(host: uri.host.to_s, port: uri.port.to_s.to_i)
       @publisher = Redis.new(host: uri.host.to_s, port: uri.port.to_s.to_i)
       
-      @subscriber.auth(Amber.settings.secrets["redis_password"])
-      @publisher.auth(Amber.settings.secrets["redis_password"])
+      if Amber.settings.secrets["redis_password"]
+        @subscriber.auth(Amber.settings.secrets["redis_password"])
+        @publisher.auth(Amber.settings.secrets["redis_password"])
+      end
       
     end
 
