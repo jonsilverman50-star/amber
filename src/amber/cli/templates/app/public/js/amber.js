@@ -73,7 +73,11 @@ export class Channel {
    * @param {Object} payload - payload object: `{message: 'hello'}`
    */
   push(subject, payload) {
-    this.socket.ws.send(JSON.stringify({ event: EVENTS.message, topic: this.topic, subject: subject, payload: payload }))
+    try {
+      this.socket.ws.send(JSON.stringify({ event: EVENTS.message, topic: this.topic, subject: subject, payload: payload }))
+    } catch {
+      this._reconnect()
+    }
   }
 }
 
