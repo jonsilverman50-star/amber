@@ -27,7 +27,7 @@ module Amber::WebSockets::Adapters
         @publisher.auth(Amber.settings.secrets["redis_password"])
       end
 
-      spawn do
+      spawn! do
         @subscriber.subscribe(CHANNEL_TOPIC_PATHS) do |on|
           on.message do |_, m|
             Fiber.yield
@@ -66,7 +66,7 @@ module Amber::WebSockets::Adapters
       begin
         @subscriber.subscribe(topic_path)
       rescue # if we can't do it we're not in a subscribe loop, just resubscribe to all channels
-        spawn do
+        spawn! do
           @subscriber.subscribe(CHANNEL_TOPIC_PATHS) do |on|
             on.message do |_, m|
               Fiber.yield
