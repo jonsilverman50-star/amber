@@ -100,7 +100,7 @@ module Amber
         @socket.ping
         @pings.push(Time.utc)
         @pings.delete_at(0) if @pings.size > 3
-      rescue ex : IO::Error
+      rescue
         disconnect!
       end
 
